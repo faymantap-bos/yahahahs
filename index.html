@@ -30,6 +30,51 @@
       overflow-x: hidden;
       padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
       background-color: #f7e7c6;
+      background-image:
+        linear-gradient(rgba(17, 17, 17, .075) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(17, 17, 17, .075) 2px, transparent 2px),
+        radial-gradient(circle at 12% 18%, rgba(184, 240, 74, .78) 0 90px, transparent 92px),
+        radial-gradient(circle at 88% 78%, rgba(158, 232, 255, .8) 0 130px, transparent 132px),
+        repeating-linear-gradient(135deg, transparent 0 22px, rgba(17, 17, 17, .025) 22px 24px);
+      background-size: 36px 36px, 36px 36px, auto, auto, auto;
+      background-position: -2px -2px, -2px -2px, center, center, center;
+      isolation: isolate;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: 12%;
+      left: clamp(-44px, 3vw, 54px);
+      width: clamp(72px, 9vw, 120px);
+      aspect-ratio: 1;
+      border: 4px solid #111111;
+      background: #ff4f9a;
+      box-shadow: 8px 8px 0 #111111;
+      transform: rotate(-12deg);
+    }
+
+    body::after {
+      right: clamp(-52px, 4vw, 68px);
+      bottom: 10%;
+      width: clamp(90px, 12vw, 160px);
+      aspect-ratio: 1;
+      border: 4px solid #111111;
+      border-radius: 50%;
+      background: #9ee8ff;
+      box-shadow: 8px 8px 0 #111111;
+    }
+
+    body > .card,
+    body > .credit {
+      position: relative;
+      z-index: 1;
     }
 
     .card {
@@ -235,6 +280,18 @@
         padding: clamp(22px, 6vw, 30px);
         box-shadow: 7px 7px 0 #111111;
       }
+
+      body::before {
+        top: 5%;
+        left: -38px;
+        opacity: .7;
+      }
+
+      body::after {
+        right: -48px;
+        bottom: 4%;
+        opacity: .72;
+      }
     }
 
     @media (max-width: 420px) {
@@ -257,6 +314,8 @@
       .value-line { align-items: stretch; flex-direction: column; }
       .copy-button { width: 100%; }
       .credit { font-size: 10px; line-height: 1.5; }
+      body::before,
+      body::after { opacity: .45; }
     }
 
     @media (prefers-reduced-motion: reduce) {

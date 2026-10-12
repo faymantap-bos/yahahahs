@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7e7c6">
+  <link rel="icon" type="image/png" href="https://files.catbox.moe/1cd6ij.png">
+  <title>AM Generator</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7e7c6;
+      color: #111111;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 320px; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+      background-color: #f7e7c6;
+    }
+
+    .card {
+      width: min(100%, 760px);
+      margin-top: auto;
+      padding: clamp(24px, 5vw, 40px);
+      border: 4px solid #111111;
+      border-radius: 8px;
+      background: #fffdf5;
+      box-shadow: 10px 10px 0 #111111;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      max-width: 100%;
+      font-size: clamp(32px, 8vw, 56px);
+      line-height: .96;
+      letter-spacing: -.065em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    h1::after {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 8px;
+      background: #ff4f9a;
+      border: 3px solid #111111;
+      vertical-align: top;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin: 0 0 18px;
+      padding: 5px 8px;
+      border: 3px solid #111111;
+      background: #b8f04a;
+      box-shadow: 4px 4px 0 #111111;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .12em;
+    }
+
+    .subtitle {
+      margin: 0 0 clamp(20px, 4vw, 28px);
+      font-size: clamp(15px, 2.5vw, 17px);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    button, a.button {
+      width: 100%;
+      border: 4px solid #111111;
+      border-radius: 6px;
+      padding: 14px 16px;
+      font: inherit;
+      font-weight: 900;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+      box-shadow: 6px 6px 0 #111111;
+      transition: transform .1s ease, box-shadow .1s ease, background .1s ease;
+    }
+
+    button { min-height: 52px; background: #ffcc33; color: #111111; }
+    button:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: 2px 2px 0 #111111; }
+    button:focus-visible, a:focus-visible { outline: 4px solid #2764ff; outline-offset: 4px; }
+    button:disabled { opacity: .55; cursor: wait; }
+
+    @media (hover: hover) and (pointer: fine) {
+      button:hover { background: #ff4f9a; }
+    }
+
+    .status {
+      min-height: 24px;
+      margin: 20px 0 0;
+      font-weight: 800;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+    .status.error { color: #c51f36; }
+
+    .progress-panel {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border: 3px solid #111111;
+      border-radius: 6px;
+      background: #ffffff;
+      box-shadow: 4px 4px 0 #111111;
+    }
+
+    .progress-panel.is-visible { display: block; }
+
+    .progress-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      height: 24px;
+      overflow: hidden;
+      border: 3px solid #111111;
+      background: #fffdf5;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: #b8f04a;
+      transition: width .4s ease;
+    }
+
+    .progress-panel.error .progress-fill { background: #ff4f9a; }
+
+    .result {
+      display: none;
+      width: 100%;
+      margin-top: 20px;
+      overflow: hidden;
+      border: 4px solid #111111;
+      border-radius: 6px;
+      box-shadow: 6px 6px 0 #111111;
+    }
+
+    .result.is-visible { display: block; }
+
+    .row { padding: 14px 15px; border-bottom: 4px solid #111111; }
+    .row:nth-child(odd) { background: #9ee8ff; }
+    .row:nth-child(even) { background: #ffffff; }
+    .row:last-child { border-bottom: 0; }
+    .label { display: block; margin-bottom: 5px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; }
+    .value-line { display: flex; align-items: center; gap: 12px; }
+    .value {
+      min-width: 0;
+      max-width: 100%;
+      flex: 1;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    a { color: #111111; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+
+    .credit {
+      width: min(100%, 760px);
+      margin: 20px 0 0;
+      margin-bottom: auto;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .copy-button {
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 64px;
+      min-height: 40px;
+      padding: 7px 10px;
+      border: 3px solid #111111;
+      border-radius: 4px;
+      background: #ffcc33;
+      color: #111111;
+      box-shadow: 3px 3px 0 #111111;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .copy-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #111111; }
+
+    @media (min-width: 700px) {
+      .result.is-visible {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .row { border-right: 4px solid #111111; }
+      .row:nth-child(even) { border-right: 0; }
+      .row:nth-last-child(-n + 2) { border-bottom: 0; }
+    }
+
+    @media (max-width: 699px) {
+      body {
+        padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      }
+
+      .card {
+        padding: clamp(22px, 6vw, 30px);
+        box-shadow: 7px 7px 0 #111111;
+      }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      }
+
+      .card {
+        padding: 20px 16px;
+        border-width: 3px;
+        box-shadow: 6px 6px 0 #111111;
+      }
+
+      h1 { font-size: clamp(30px, 12vw, 42px); }
+      h1::after { width: 11px; height: 11px; border-width: 2px; }
+      .eyebrow { margin-bottom: 16px; font-size: 10px; letter-spacing: .09em; }
+      .status { font-size: 14px; }
+      .progress-header { font-size: 11px; }
+      .row { padding: 13px 12px; }
+      .value-line { align-items: stretch; flex-direction: column; }
+      .copy-button { width: 100%; }
+      .credit { font-size: 10px; line-height: 1.5; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="appCard" class="card">
+    <p class="eyebrow">ALIGHT MOTION PREMIUM</p>
+    <h1>AM Generator</h1>
+    <p class="subtitle">Buat akun premium dan tampilkan hasilnya.</p>
+
+    <button id="generateButton" type="button">Generate Account</button>
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <div id="progressPanel" class="progress-panel">
+      <div class="progress-header">
+        <span id="progressStage" aria-live="polite">Menyiapkan proses...</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div
+        id="progressTrack"
+        class="progress-track"
+        role="progressbar"
+        aria-label="Progres pembuatan akun"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <section id="result" class="result" aria-live="polite">
+      <div class="row">
+        <span class="label">Email</span>
+        <div class="value-line">
+          <span id="email" class="value"></span>
+          <button class="copy-button" type="button" data-copy-target="email">Copy</button>
+        </div>
+      </div>
+      <div class="row">
+        <span class="label">Inbox</span>
+        <div class="value-line">
+          <a id="inboxLink" class="value" target="_blank" rel="noopener noreferrer">Buka inbox</a>
+          <button class="copy-button" type="button" data-copy-target="inboxLink">Copy</button>
+        </div>
+      </div>
+      <div class="row"><span class="label">Membership</span><span id="membership" class="value"></span></div>
+      <div class="row"><span class="label">Plan</span><span id="plan" class="value"></span></div>
+      <div class="row"><span class="label">Order ID</span><span id="orderId" class="value"></span></div>
+      <div class="row"><span class="label">Valid until</span><span id="validUntil" class="value"></span></div>
+    </section>
+
+  </main>
+
+  <footer class="credit">© 2026 NOXXY TECH. All Rights Reserved.</footer>
+
+  <script>
+    const button = document.getElementById("generateButton");
+    const appCard = document.getElementById("appCard");
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+    const progressPanel = document.getElementById("progressPanel");
+    const progressTrack = document.getElementById("progressTrack");
+    const progressFill = document.getElementById("progressFill");
+    const progressStage = document.getElementById("progressStage");
+    const progressPercent = document.getElementById("progressPercent");
+    const buttonIdleText = button.textContent;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let progressTimer;
+
+    function updateProgress(value, stage) {
+      const progress = Math.max(0, Math.min(100, Math.round(value)));
+      progressFill.style.width = `${progress}%`;
+      progressPercent.textContent = `${progress}%`;
+      progressTrack.setAttribute("aria-valuenow", String(progress));
+      progressTrack.setAttribute("aria-valuetext", stage);
+      if (progressStage.textContent !== stage) {
+        progressStage.textContent = stage;
+      }
+    }
+
+    function startProgress() {
+      clearInterval(progressTimer);
+      progressPanel.className = "progress-panel is-visible";
+      updateProgress(5, "Menyiapkan alamat email...");
+
+      requestAnimationFrame(() => {
+        progressPanel.scrollIntoView({
+          behavior: reduceMotion.matches ? "auto" : "smooth",
+          block: "nearest"
+        });
+      });
+
+      const startedAt = Date.now();
+      progressTimer = setInterval(() => {
+        const elapsedSeconds = (Date.now() - startedAt) / 1000;
+        const estimatedProgress = Math.min(92, 5 + elapsedSeconds * 2.2);
+        let stage = "Menyelesaikan pembuatan akun...";
+
+        if (elapsedSeconds < 4) {
+          stage = "Menyiapkan alamat email...";
+        } else if (elapsedSeconds < 9) {
+          stage = "Mengirim link verifikasi...";
+        } else if (elapsedSeconds < 22) {
+          stage = "Menunggu email verifikasi...";
+        } else if (elapsedSeconds < 36) {
+          stage = "Memeriksa inbox email...";
+        } else if (elapsedSeconds < 48) {
+          stage = "Memverifikasi akun...";
+        }
+
+        updateProgress(estimatedProgress, stage);
+      }, 800);
+    }
+
+    function stopProgress() {
+      clearInterval(progressTimer);
+      progressTimer = undefined;
+    }
+
+    async function copyValue(targetId, copyButton) {
+      const target = document.getElementById(targetId);
+      const value = targetId === "inboxLink" ? target.href : target.textContent.trim();
+
+      if (!value || value === "-" || value === window.location.href + "#") {
+        return;
+      }
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(value);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = value;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          const copied = document.execCommand("copy");
+          textarea.remove();
+          if (!copied) throw new Error("copy failed");
+        }
+
+        const originalText = copyButton.textContent;
+        copyButton.textContent = "Copied";
+        setTimeout(() => { copyButton.textContent = originalText; }, 1200);
+      } catch {
+        status.className = "status error";
+        status.textContent = "Gagal menyalin. Silakan salin secara manual.";
+      }
+    }
+
+    document.querySelectorAll(".copy-button").forEach(copyButton => {
+      copyButton.addEventListener("click", () => {
+        copyValue(copyButton.dataset.copyTarget, copyButton);
+      });
+    });
+
+    function valueOrDash(value) {
+      return value === undefined || value === null || value === "" ? "-" : String(value);
+    }
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      button.textContent = "Sedang diproses...";
+      appCard.setAttribute("aria-busy", "true");
+      result.classList.remove("is-visible");
+      status.className = "status";
+      status.textContent = "Proses pembuatan akun sedang berjalan.";
+      startProgress();
+
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}"
+        });
+
+        const responseText = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          throw new Error(response.ok
+            ? "Respons server tidak valid."
+            : `Server gagal memproses permintaan (HTTP ${response.status}).`);
+        }
+
+        if (!response.ok || !data.status) {
+          throw new Error(data.error || "Gagal membuat akun");
+        }
+
+        document.getElementById("email").textContent = valueOrDash(data.email);
+        const inboxLink = document.getElementById("inboxLink");
+        const inbox = data.inbox || data.inbox_link;
+        inboxLink.href = inbox || "#";
+        inboxLink.textContent = inbox || "-";
+        document.getElementById("membership").textContent = valueOrDash(
+          data.membershipStatus ?? data.membership
+        );
+        document.getElementById("plan").textContent = valueOrDash(data.planName ?? data.plan);
+        document.getElementById("orderId").textContent = valueOrDash(
+          data.orderId ?? data.subscription
+        );
+        document.getElementById("validUntil").textContent = valueOrDash(
+          data.validUntil ?? data.valid_until
+        );
+
+        result.classList.add("is-visible");
+        stopProgress();
+        updateProgress(100, "Akun berhasil dibuat");
+        status.textContent = "Akun berhasil dibuat.";
+
+        requestAnimationFrame(() => {
+          result.scrollIntoView({
+            behavior: reduceMotion.matches ? "auto" : "smooth",
+            block: "nearest"
+          });
+        });
+      } catch (error) {
+        stopProgress();
+        progressPanel.classList.add("error");
+        progressStage.textContent = "Proses gagal";
+        status.className = "status error";
+        status.textContent = error.message || "Terjadi kesalahan.";
+      } finally {
+        stopProgress();
+        button.disabled = false;
+        button.textContent = buttonIdleText;
+        appCard.removeAttribute("aria-busy");
+      }
+    });
+  </script>
+</body>
+</html>

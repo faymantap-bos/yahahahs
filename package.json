@@ -1,0 +1,16 @@
+{
+  "name": "am-generator",
+  "version": "1.0.0",
+  "description": "Alight Motion account generator for Vercel",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check fixbulk.js && node --check api/generate.js",
+    "generate": "node fixbulk.js"
+  },
+  "author": "faykal",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

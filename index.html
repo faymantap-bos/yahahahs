@@ -147,7 +147,10 @@
 
     button { min-height: 52px; background: #ffcc33; color: #111111; }
     button:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: 2px 2px 0 #111111; }
-    button:focus-visible, a:focus-visible { outline: 4px solid #2764ff; outline-offset: 4px; }
+    button:focus,
+    button:focus-visible,
+    a:focus,
+    a:focus-visible { outline: none; }
     button:disabled { opacity: .55; cursor: wait; }
 
     @media (hover: hover) and (pointer: fine) {
@@ -261,6 +264,198 @@
 
     .copy-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #111111; }
 
+    body.notice-open { overflow: hidden; }
+
+    .notice-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      overflow-y: auto;
+      padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      background: rgba(0, 0, 0, .72);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+
+    .notice-overlay[hidden] { display: none; }
+
+    .notice-modal {
+      position: relative;
+      width: min(100%, 610px);
+      padding: clamp(18px, 3vw, 23px);
+      border: 4px solid #111111;
+      background: #fffdf5;
+      box-shadow: 9px 9px 0 #111111;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 400;
+    }
+
+    .notice-modal:focus { outline: none; }
+
+    .notice-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #dedbd2;
+    }
+
+    .notice-shield {
+      display: grid;
+      flex: 0 0 52px;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      border: 3px solid #111111;
+      background: #ffd335;
+      box-shadow: 4px 4px 0 #111111;
+    }
+
+    .notice-shield svg { width: 26px; height: 26px; }
+
+    .notice-kicker {
+      display: inline-block;
+      margin: 0 0 6px;
+      padding: 4px 7px;
+      background: #111111;
+      color: #9cf000;
+      font-size: 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .notice-title {
+      margin: 0;
+      font-family: "Arial Black", Arial, Helvetica, sans-serif;
+      font-size: clamp(22px, 4vw, 27px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.035em;
+      text-transform: uppercase;
+    }
+
+    .notice-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 12px 0 10px;
+      padding: 12px;
+      border: 3px solid #111111;
+      background: #ed0014;
+      color: #ffffff;
+      box-shadow: 4px 4px 0 #111111;
+    }
+
+    .notice-alert-icon {
+      display: grid;
+      flex: 0 0 48px;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 2px solid #111111;
+      background: #ffffff;
+      color: #111111;
+    }
+
+    .notice-alert-icon svg { width: 29px; height: 29px; }
+
+    .notice-alert h3 {
+      margin: 2px 0 7px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(16px, 3vw, 18px);
+      font-weight: 700;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .notice-alert p {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .notice-fact {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      margin-top: 8px;
+      padding: 11px 12px;
+      border: 2px solid #111111;
+      background: #ffffff;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .notice-fact svg {
+      flex: 0 0 22px;
+      width: 22px;
+      height: 22px;
+    }
+
+    .notice-domain {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 2px solid #111111;
+      background: #ffd335;
+      font-size: 12px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .notice-domain svg { flex: 0 0 21px; width: 21px; height: 21px; }
+
+    .notice-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .notice-modal .notice-button {
+      display: flex;
+      width: 100%;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 11px;
+      border: 3px solid #111111;
+      border-radius: 0;
+      color: inherit;
+      box-shadow: 4px 4px 0 #111111;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .notice-modal .notice-button:hover { background: #ffffff; }
+    .notice-modal .notice-report { background: #9cf000; }
+    .notice-modal .notice-accept { background: #111111; color: #ffffff; box-shadow: 4px 4px 0 #ffd335; }
+    .notice-modal .notice-accept:hover { background: #242424; }
+    .notice-modal .notice-button svg { width: 17px; height: 17px; margin-right: 6px; vertical-align: -3px; }
+
+    .notice-brand {
+      margin: 14px 0 -10px;
+      padding-top: 12px;
+      border-top: 1px solid #dedbd2;
+      color: #77736d;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
     @media (min-width: 700px) {
       .result.is-visible {
         display: grid;
@@ -294,6 +489,10 @@
       }
     }
 
+    @media (max-height: 720px) {
+      .notice-overlay { align-items: start; }
+    }
+
     @media (max-width: 420px) {
       body {
         padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
@@ -316,6 +515,22 @@
       .credit { font-size: 10px; line-height: 1.5; }
       body::before,
       body::after { opacity: .45; }
+
+      .notice-overlay { align-items: start; padding: 10px; }
+      .notice-modal { padding: 16px 13px; border-width: 3px; box-shadow: 7px 7px 0 #111111; }
+      .notice-heading { gap: 10px; padding-bottom: 13px; }
+      .notice-shield { flex-basis: 48px; width: 48px; height: 48px; box-shadow: 3px 3px 0 #111111; }
+      .notice-shield svg { width: 25px; height: 25px; }
+      .notice-kicker { margin-bottom: 6px; padding: 4px 6px; font-size: 9px; }
+      .notice-title { font-size: clamp(20px, 7vw, 27px); }
+      .notice-alert { gap: 10px; padding: 11px; }
+      .notice-alert-icon { flex-basis: 45px; width: 45px; height: 45px; }
+      .notice-alert-icon svg { width: 28px; height: 28px; }
+      .notice-alert h3 { margin-top: 0; font-size: 16px; }
+      .notice-alert p, .notice-fact, .notice-domain { font-size: 11px; }
+      .notice-fact { gap: 10px; padding: 11px; line-height: 1.5; }
+      .notice-actions { grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+      .notice-modal .notice-button { min-height: 46px; font-size: 11px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -327,6 +542,74 @@
   </style>
 </head>
 <body>
+  <div id="freeNotice" class="notice-overlay" role="presentation">
+    <section
+      id="freeNoticeDialog"
+      class="notice-modal"
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      aria-labelledby="freeNoticeTitle"
+      aria-describedby="freeNoticeDescription"
+    >
+      <header class="notice-heading">
+        <span class="notice-shield" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 20 7v5c0 5-3.4 8-8 9-4.6-1-8-4-8-9V7l8-4Z"/><path d="M12 8v4"/><path d="M12 16h.01"/>
+          </svg>
+        </span>
+        <div>
+          <p class="notice-kicker">Pemberitahuan resmi</p>
+          <h2 id="freeNoticeTitle" class="notice-title">Layanan ini 100% gratis</h2>
+        </div>
+      </header>
+
+      <div id="freeNoticeDescription" class="notice-alert">
+        <span class="notice-alert-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.3 3.7 2.5 17.2A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.8L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+          </svg>
+        </span>
+        <div>
+          <h3>Jangan membayar siapa pun</h3>
+          <p>Dilarang memperjualbelikan, menyewakan, atau memungut biaya atas akses ke layanan ini.</p>
+        </div>
+      </div>
+
+      <div class="notice-fact">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Developer <strong>tidak memiliki reseller, agen, admin berbayar,</strong> atau layanan VIP berbayar.</span>
+      </div>
+
+      <div class="notice-fact">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span>Jika Anda diminta membayar, pihak tersebut <strong>tidak berafiliasi dengan Developer.</strong></span>
+      </div>
+
+      <div class="notice-domain">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+        <span>DOMAIN RESMI: <span id="officialDomain">website ini</span></span>
+      </div>
+
+      <div class="notice-actions">
+        <a
+          class="notice-button notice-report"
+          href="https://t.me/noxxytech"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+          Laporkan penjual
+        </a>
+        <button id="acceptFreeNotice" class="notice-button notice-accept" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>
+          Saya paham, ini gratis
+        </button>
+      </div>
+      <p class="notice-brand">Power by Noxxytech</p>
+    </section>
+  </div>
+
   <main id="appCard" class="card">
     <p class="eyebrow">ALIGHT MOTION PREMIUM</p>
     <h1>AM Generator</h1>
@@ -379,6 +662,25 @@
   <footer class="credit">© 2026 NOXXY TECH. All Rights Reserved.</footer>
 
   <script>
+    const freeNotice = document.getElementById("freeNotice");
+    const freeNoticeDialog = document.getElementById("freeNoticeDialog");
+    const acceptFreeNotice = document.getElementById("acceptFreeNotice");
+    const officialDomain = document.getElementById("officialDomain");
+    const pageHost = window.location.hostname;
+
+    officialDomain.textContent = pageHost && pageHost !== "localhost"
+      ? pageHost
+      : "amgen.noxxyrorr.biz.id";
+    document.body.classList.add("notice-open");
+
+    requestAnimationFrame(() => freeNoticeDialog.focus({ preventScroll: true }));
+
+    acceptFreeNotice.addEventListener("click", () => {
+      freeNotice.hidden = true;
+      document.body.classList.remove("notice-open");
+      document.getElementById("generateButton").focus();
+    });
+
     const button = document.getElementById("generateButton");
     const appCard = document.getElementById("appCard");
     const status = document.getElementById("status");
